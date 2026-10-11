@@ -5,6 +5,8 @@ import PromptGrid from './components/PromptGrid';
 import PromptBuilder from './components/PromptBuilder';
 import ChecklistSidebar from './components/ChecklistSidebar';
 import Repository from './components/Repository';
+import LoraManager from './components/LoraManager';
+import Updates from './components/Updates';
 
 function App() {
   const [data, setData] = useState({ categories: [], prompts: [], flowNodes: [], wallpaperUrl: null, wallpaperBlur: 0 });
@@ -142,7 +144,8 @@ function App() {
                      categoryId: targetCatId,
                      text: importedPrompt.text,
                      note: importedPrompt.note || '',
-                     subNote: importedPrompt.subNote || ''
+                     subNote: importedPrompt.subNote || '',
+                     extraTag: importedPrompt.extraTag || ''
                   });
                   importCount++;
                }
@@ -295,7 +298,7 @@ function App() {
         onSetWallpaperBlur={(val) => saveData({ ...data, wallpaperBlur: val })}
       />
       <div className="main-content">
-        {view !== 'prompts' ? <Repository key={view} view={view} prompts={data.prompts} categories={data.categories} selectedPrompts={selectedPrompts} onToggleSelection={togglePromptSelection} onOpenPrompt={(prompt) => { setActiveCategory(prompt.categoryId); setView('prompts'); }} /> : (
+        {view === 'updates' ? <Updates /> : view === 'lora-manager' ? <LoraManager prompts={data.prompts} categories={data.categories} /> : view !== 'prompts' ? <Repository onManage={() => setView('lora-manager')} key={view} view={view} prompts={data.prompts} categories={data.categories} selectedPrompts={selectedPrompts} onToggleSelection={togglePromptSelection} onOpenPrompt={(prompt) => { setActiveCategory(prompt.categoryId); setView('prompts'); }} /> : (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
           <PromptGrid 
             categoryName={breadcrumbName}

@@ -1,0 +1,6 @@
+PROMPT MANAGER DISPLAY-ONLY PLACEHOLDER
+Name: demo_manual_shapes
+Fixture version: A
+This is plain text, NOT model weights and NOT a usable LoRA.
+Do not load this file in ComfyUI or another inference application.
+Created specifically as original demonstration data for Prompt Manager.

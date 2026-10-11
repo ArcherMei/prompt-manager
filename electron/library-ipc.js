@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { randomUUID } from 'node:crypto';
 import { Library } from './library.js';
 
-export function registerLibrary(getWindow) {
+export function registerLibrary(getWindow, getPrompts) {
   const library = new Library(path.join(app.getPath('userData'), 'repository'));
   const ready = library.load();
   ready.catch(() => {}); // Report initialization failures through the UI, never overwrite a damaged database.
@@ -19,9 +19,36 @@ export function registerLibrary(getWindow) {
       return task.then(async result => ({ success: true, data: await library.list(), ...result }), error => ({ success: false, error: error.message }));
     });
   }
-  handle('library-list', async () => ({}));
+  handle('library-scan', async (side) => ({ inventory: await library.scanInventory(side) }));
+  handle('library-link-prompt', async (fileId, promptId, mode) => {
+    if (!getPrompts().some(prompt => prompt.id === promptId)) throw new Error('这个 tag 已不存在，请刷新页面');
+    await library.linkPrompt(fileId, promptId, mode);
+  });
+  handle('library-reveal-inventory', async id => {
+    const file = library.inventory?.files.find(item => item.id === id);
+    if (!file) throw new Error('请先重新扫描');
+    await fs.access(file.path);
+    shell.showItemInFolder(file.path);
+  });
+  handle('library-list', async () => { await library.refreshRepository(); return {}; });
+  handle('library-compare', async () => ({ comparison: await library.compare() }));
+  handle('library-copy-missing', async (ids, side) => {
+    if (!library.comparison || !['storage', 'deployment'].includes(side)) throw new Error('请先核对两个文件夹');
+    const target = side === 'storage' ? library.comparison.deployment : library.comparison.storage;
+    const result = await dialog.showOpenDialog(getWindow(), { title: side === 'storage' ? '复制到 ComfyUI 的 LoRA 模型文件夹：选择目标子文件夹' : '复制到 LoRA 仓库文件夹：选择目标子文件夹', defaultPath: target, properties: ['openDirectory', 'createDirectory'] });
+    if (result.canceled) return { canceled: true };
+    const copyResults = await library.copyMissing(ids, side, result.filePaths[0]);
+    return { copyResults };
+  });
+  handle('library-cleanup-preview', async () => ({ cleanup: await library.cleanupPreview() }));
+  handle('library-cleanup', async () => ({ cleanupResult: await library.cleanupLegacy() }));
+  handle('library-export-zip', async () => {
+    const result = await dialog.showSaveDialog(getWindow(), { title: '导出 LoRA 仓库的全部模型、HTML 和网页资源', defaultPath: `LoRA仓库-${new Date().toISOString().slice(0, 10)}.zip`, filters: [{ name: 'ZIP 文件', extensions: ['zip'] }] });
+    if (result.canceled) return { canceled: true };
+    return { exported: await library.exportZip(result.filePath, getPrompts()) };
+  });
   handle('library-set-directory', async kind => {
-    const result = await dialog.showOpenDialog(getWindow(), { title: kind === 'storage' ? '选择仓库目录（模型 + HTML）' : '选择本地 AI 的 LoRA 目录（仅模型）', properties: ['openDirectory', 'createDirectory'] });
+    const result = await dialog.showOpenDialog(getWindow(), { title: kind === 'storage' ? '选择 LoRA 仓库文件夹（存放模型和 HTML 使用说明）' : '选择 ComfyUI 的 LoRA 模型文件夹（包含子文件夹，不存放 HTML）', properties: ['openDirectory', 'createDirectory'] });
     if (result.canceled) return { canceled: true };
     await library.setDirectory(kind, result.filePaths[0]);
   });
@@ -67,4 +94,5 @@ export function registerLibrary(getWindow) {
     preview.webContents.on('will-navigate', event => event.preventDefault());
     await preview.loadFile(file);
   });
+  return () => queue;
 }

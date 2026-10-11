@@ -1,7 +1,7 @@
 {
   "name": "prompt-manager",
   "private": true,
-  "version": "0.0.2",
+  "version": "0.0.4",
   "type": "module",
   "main": "electron/main.js",
   "scripts": {
@@ -16,7 +16,8 @@
   },
   "dependencies": {
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.4",
+    "yazl": "^3.3.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
@@ -43,13 +44,17 @@
       "output": "dist-electron"
     },
     "mac": {
-      "target": ["dmg"]
+      "target": [
+        "dmg"
+      ]
     },
     "win": {
       "target": [
         {
           "target": "nsis",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ]
     },
@@ -61,7 +66,18 @@
     "files": [
       "dist/**/*",
       "electron/**/*",
-      "package.json"
+      "package.json",
+      "LICENSE",
+      "README.md",
+      "README.zh-CN.md",
+      "THIRD_PARTY_NOTICES.md"
     ]
+  },
+  "license": "GPL-3.0-only",
+  "description": "Local Prompt / Tag and LoRA manager with HTML guides and folder comparison",
+  "author": "ArcherMei",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ArcherMei/prompt-manager.git"
   }
 }

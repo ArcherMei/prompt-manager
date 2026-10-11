@@ -1,0 +1,48 @@
+{
+  "categories": [
+    {
+      "id": "example-root",
+      "name": "EXAMPLE · 虚构展示数据",
+      "parentId": null
+    },
+    {
+      "id": "example-records",
+      "name": "LoRA 关联演示",
+      "parentId": "example-root"
+    }
+  ],
+  "prompts": [
+    {
+      "id": "example-prompt-1",
+      "categoryId": "example-records",
+      "text": "layered paper hills, warm morning light",
+      "note": "demo_paper_hills.safetensors",
+      "extraTag": "",
+      "subNote": "仅供展示，不可加载为模型。"
+    },
+    {
+      "id": "example-prompt-2",
+      "categoryId": "example-records",
+      "text": "translucent geometric garden, soft daylight",
+      "note": "玻璃花园 / Glass Garden",
+      "extraTag": "<lora:demo_glass_garden:0.7>",
+      "subNote": "仅供展示，不可加载为模型。"
+    },
+    {
+      "id": "example-prompt-3",
+      "categoryId": "example-records",
+      "text": "copper geometric shapes, neutral background",
+      "note": "demo_copper_shapes.safetensors",
+      "extraTag": "",
+      "subNote": "仅供展示，不可加载为模型。"
+    },
+    {
+      "id": "example-prompt-4",
+      "categoryId": "example-records",
+      "text": "floating shapes, soft shadows",
+      "note": "手动关联演示 / Manual Shapes",
+      "extraTag": "",
+      "subNote": "仅供展示，不可加载为模型。请手动关联此记录。"
+    }
+  ]
+}

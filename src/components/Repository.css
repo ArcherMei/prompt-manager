@@ -63,3 +63,39 @@
 .library-navigation button { text-align:left; padding:10px 12px; font-size:13px; border-radius:6px; color:var(--text-secondary); }
 .library-navigation button[aria-current="page"] { background:var(--chip-active); color:var(--text-primary); }
 @media (max-width:1000px) { .repository { padding:16px; } .repository-workspace { flex-direction:column; overflow:auto; } .model-list { flex:none; max-height:240px; } .model-detail { width:100%; min-width:0; overflow:visible; border-left:0; border-top:1px solid var(--glass-border); } .repository-toolbar { flex-wrap:wrap; } }
+.lora-management-workspace { display:grid; grid-template-columns:minmax(0, 1fr) 280px; gap:16px; flex:1; min-height:0; }
+.lora-management-files, .lora-tag-panel { display:flex; flex-direction:column; gap:12px; min-height:0; min-width:0; }
+.lora-file-scroll, .lora-tag-scroll { overflow:auto; flex:1; min-height:0; }
+.lora-file-card { border:1px solid var(--glass-border); border-radius:8px; padding:14px; margin-bottom:10px; }
+.lora-file-card.drop-active { border-color:#8db8ff; background:#8db8ff22; outline:2px solid #8db8ff; outline-offset:-2px; }
+.lora-drop-name { text-align:left; overflow-wrap:anywhere; font-weight:600; color:var(--text-primary); }
+.lora-manager .lora-drop-name:disabled { opacity:1; cursor:default; }
+.lora-file-card .detail-path { margin:8px 0; }
+.lora-tag-panel { border-left:1px solid var(--glass-border); padding-left:16px; }
+.lora-draggable-tag { display:flex; flex-direction:column; gap:6px; text-align:left; border:1px solid var(--glass-border); border-radius:6px; padding:10px; margin-bottom:8px; width:100%; cursor:grab; }
+.lora-draggable-tag code, .lora-linked-tags code { overflow-wrap:anywhere; font-size:12px; }
+.lora-draggable-tag.selected { border-color:#8db8ff; background:#8db8ff18; }
+.lora-linked-tags { display:flex; flex-direction:column; gap:6px; }
+.lora-linked-tags > span { display:flex; align-items:center; gap:8px; padding:7px; background:#207b5420; border-radius:4px; }
+.lora-linked-tags code { flex:1; min-width:0; }
+.lora-linked-tags button { padding:4px 8px; }
+.restore-match { color:#8db8ff; font-size:11px; margin:8px 8px 0 0; text-align:left; overflow-wrap:anywhere; }
+.update-panel { max-width:720px; border:1px solid var(--glass-border); padding:24px; border-radius:12px; display:flex; flex-direction:column; align-items:flex-start; gap:18px; line-height:1.8; }
+@media (max-width:1000px) { .lora-management-workspace { grid-template-columns:minmax(0, 1fr) 220px; gap:10px; } .lora-manager .repository-header { gap:8px; } }
+.lora-manager { overflow:auto; }
+.lora-manager > * { flex-shrink:0; }
+.lora-manager .lora-management-workspace { flex:1 0 420px; grid-template-columns:minmax(0,1fr) minmax(300px,40%); }
+.lora-manager .repository-directories button { display:block; margin-top:8px; }
+.lora-manager .repository-directories strong { font-size:13px; }
+.lora-manager .repository-directories p { max-height:none; font-size:12px; }
+.lora-file-card.selected { border-color:#8db8ff; background:#8db8ff12; }
+.prompt-fields { display:flex; flex-direction:column; gap:10px; width:100%; overflow-wrap:anywhere; white-space:pre-wrap; user-select:text; font-size:13px; }
+.prompt-fields > div { border-top:1px solid var(--glass-border); padding-top:6px; }
+.prompt-fields > div > div { margin-top:4px; }
+.folder-tool-scroll { overflow:auto; flex:1; min-height:240px; display:flex; flex-direction:column; gap:12px; }
+.folder-tool-scroll > * { flex-shrink:0; }
+.repository-status { max-height:160px; overflow:auto; }
+@media (max-width:800px) { .lora-manager .lora-management-workspace { display:flex; flex-direction:column; } .lora-manager .lora-file-scroll { max-height:420px; } .lora-manager .lora-tag-scroll { max-height:500px; } .repository-directories { grid-template-columns:1fr; } }
+.lora-directory-settings summary { cursor:pointer; font-size:12px; color:#adc7eb; padding:8px 0; }
+.lora-directory-settings .repository-directories { margin-top:8px; }
+.lora-manager .lora-management-workspace { flex:1 0 360px; }

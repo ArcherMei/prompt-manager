@@ -132,6 +132,8 @@ export default function Sidebar({ view, onChangeView, categories, activeCategory
         <button aria-current={view === 'prompts' ? 'page' : undefined} onClick={() => onChangeView('prompts')}>⌘　Prompt / Tag</button>
         <button aria-current={view === 'repository' ? 'page' : undefined} onClick={() => onChangeView('repository')}>▦　LoRA 仓库</button>
         <button aria-current={view === 'archives' ? 'page' : undefined} onClick={() => onChangeView('archives')}>▤　HTML 网页存档</button>
+        <button aria-current={view === 'lora-manager' ? 'page' : undefined} onClick={() => onChangeView('lora-manager')}>✓　LoRA 文件管理</button>
+        <button aria-current={view === 'updates' ? 'page' : undefined} onClick={() => onChangeView('updates')}>↑　软件更新</button>
       </nav>
       <div style={{ padding: '24px 20px', borderBottom: '1px solid var(--glass-border)' }}>
         <h2 style={{ fontSize: '18px', fontWeight: '600', letterSpacing: '0.5px', color: 'var(--text-primary)', marginBottom: '16px' }}>Library</h2>

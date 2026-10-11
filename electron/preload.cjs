@@ -1,7 +1,16 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
+  updates: { info: () => ipcRenderer.invoke('update-info'), install: () => ipcRenderer.invoke('update-install') },
   library: {
+    scan: (side) => ipcRenderer.invoke('library-scan', side),
+    compare: () => ipcRenderer.invoke('library-compare'),
+    copyMissing: (ids, side) => ipcRenderer.invoke('library-copy-missing', ids, side),
+    exportZip: () => ipcRenderer.invoke('library-export-zip'),
+    cleanupPreview: () => ipcRenderer.invoke('library-cleanup-preview'),
+    cleanup: () => ipcRenderer.invoke('library-cleanup'),
+    linkPrompt: (fileId, promptId, mode) => ipcRenderer.invoke('library-link-prompt', fileId, promptId, mode),
+    revealInventory: (id) => ipcRenderer.invoke('library-reveal-inventory', id),
     setDirectory: (kind) => ipcRenderer.invoke('library-set-directory', kind),
     deploy: (id) => ipcRenderer.invoke('library-deploy', id),
     list: () => ipcRenderer.invoke('library-list'),

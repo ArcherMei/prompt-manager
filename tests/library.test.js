@@ -44,9 +44,9 @@ test('display rename preserves original file, tag matches and history', async t 
   await library.rename(id, '猫');
   const model = library.model(id);
   assert.equal(await fs.readFile(file, 'utf8'), 'model');
-  assert.equal(matchPrompt({ text: '<lora:CAT:0.8>' }, model), 'LoRA tag');
-  assert.equal(matchPrompt({ extraTag: '<lora:My Cat:1>' }, model), 'LoRA tag');
-  assert.equal(matchPrompt({ subNote: 'C:\\Models\\cat.safetensors' }, model), '备注 / tag');
+  assert.equal(matchPrompt({ text: '<lora:CAT:0.8>' }, model), 'Prompt 正文 中的 LoRA 名称：CAT');
+  assert.equal(matchPrompt({ extraTag: '<lora:My Cat:1>' }, model), 'Complex LoRA Tag 中的 LoRA 名称：My Cat');
+  assert.equal(matchPrompt({ subNote: 'C:\\Models\\cat.safetensors' }, model), '文件名与 Sub-Note 一致');
   assert.equal(matchPrompt({ text: '<lora:catgirl:1>' }, model), null);
   assert.equal(matchPrompt({ text: 'cats and dogs' }, model), null);
   await assert.rejects(library.rename(id, '  '));
@@ -84,7 +84,7 @@ test('invalid database is not silently replaced', async t => {
   assert.equal(await fs.readFile(library.dbPath, 'utf8'), '{broken');
 });
 
-test('custom storage migrates model and HTML; deployment copies only the model and refuses conflicts', async t => {
+test('selecting storage leaves existing model and HTML untouched; deployment copies only the model and refuses conflicts', async t => {
   const { directory, library } = await setup(t);
   const source = path.join(directory, 'detail.safetensors');
   const html = path.join(directory, 'usage.html');
@@ -96,7 +96,10 @@ test('custom storage migrates model and HTML; deployment copies only the model a
   const storage = path.join(directory, '我的仓库');
   const target = path.join(directory, 'AI LoRA');
   await fs.mkdir(storage); await fs.mkdir(target);
+  const oldModelPath = library.model(id).path;
   await library.setDirectory('storage', storage);
+  assert.equal(library.model(id).path, oldModelPath, 'selecting a folder never migrates files');
+  assert.deepEqual(await fs.readdir(storage), []);
   assert.equal(await fs.readFile(library.model(id).path, 'utf8'), 'original-model');
   const archived = library.archivePath(library.data.archives[0].id);
   assert.ok(archived.startsWith(path.dirname(library.model(id).path)));
@@ -111,4 +114,42 @@ test('custom storage migrates model and HTML; deployment copies only the model a
   const reopened = new Library(library.root); await reopened.load();
   assert.equal(reopened.data.deploymentDirectory, await fs.realpath(target));
   assert.equal(reopened.data.storageDirectory, await fs.realpath(storage));
+});
+
+test('existing LoRA inventory is recursive, read-only, and manual links survive restart', async t => {
+  const { directory, library } = await setup(t);
+  const root = path.join(directory, 'existing');
+  await fs.mkdir(path.join(root, '人物', '二级'), { recursive: true });
+  const file = path.join(root, '人物', '二级', 'hero.SAFETENSORS');
+  await fs.writeFile(file, 'existing model');
+  await fs.writeFile(path.join(root, 'usage.html'), 'html');
+  await fs.symlink(root, path.join(root, 'loop'));
+  await library.setDirectory('deployment', root);
+  const inventory = await library.scanInventory();
+  assert.equal(inventory.files.length, 1);
+  assert.equal(inventory.files[0].relativePath, path.join('人物', '二级', 'hero.SAFETENSORS'));
+  assert.equal(library.data.models.length, 0, 'scan does not import or copy models');
+  await library.linkPrompt(inventory.files[0].id, 'p-1', 'link');
+  await library.linkPrompt(inventory.files[0].id, 'p-1', 'link');
+  const reopened = new Library(library.root); await reopened.load();
+  const rescanned = await reopened.scanInventory();
+  assert.equal(rescanned.files[0].id, inventory.files[0].id);
+  assert.deepEqual(reopened.data.inventoryLinks[inventory.files[0].path].promptIds, ['p-1']);
+  await reopened.linkPrompt(rescanned.files[0].id, 'p-1', 'unlink');
+  assert.deepEqual(reopened.data.inventoryLinks[inventory.files[0].path], { promptIds: [], excluded: ['p-1'] });
+  await reopened.linkPrompt(rescanned.files[0].id, 'p-1', 'auto');
+  assert.deepEqual(reopened.data.inventoryLinks[inventory.files[0].path], { promptIds: [], excluded: [] });
+  assert.equal(await fs.readFile(file, 'utf8'), 'existing model');
+  await fs.unlink(file);
+  await assert.rejects(reopened.linkPrompt(rescanned.files[0].id, 'p-1', 'link'));
+  assert.equal((await reopened.scanInventory()).files.length, 0);
+  await assert.rejects(reopened.linkPrompt('missing', 'p-1', 'link'));
+});
+
+test('inventory follows configured AI directory before any copies are imported', async t => {
+  const { directory, library } = await setup(t);
+  const target = path.join(directory, 'AI'); await fs.mkdir(target);
+  await fs.writeFile(path.join(target, 'existing.pt'), 'model');
+  await library.setDirectory('deployment', target);
+  assert.equal((await library.scanInventory()).files.length, 1);
 });

@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import fs from 'fs';
 import { Store } from './store.js';
 import { registerLibrary } from './library-ipc.js';
+import { registerUpdater } from './updater.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,6 +13,15 @@ const isDev = process.env.NODE_ENV === 'development';
 
 let store;
 let mainWindow;
+
+const primaryInstance = app.requestSingleInstanceLock();
+if (!primaryInstance) app.quit();
+app.on('second-instance', () => {
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.show(); mainWindow.focus();
+  }
+});
 
 function createWindow () {
   mainWindow = new BrowserWindow({
@@ -36,6 +46,7 @@ function createWindow () {
 }
 
 app.whenReady().then(() => {
+  if (!primaryInstance) return;
   store = new Store({
     configName: 'user-preferences',
     defaults: {
@@ -128,7 +139,8 @@ app.whenReady().then(() => {
   });
 
   createWindow();
-  registerLibrary(() => mainWindow);
+  const drainLibrary = registerLibrary(() => mainWindow, () => store.get().prompts || []);
+  registerUpdater(() => mainWindow, drainLibrary);
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
