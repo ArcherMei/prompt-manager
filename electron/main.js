@@ -5,6 +5,7 @@ import fs from 'fs';
 import { Store } from './store.js';
 import { registerLibrary } from './library-ipc.js';
 import { registerUpdater } from './updater.js';
+import { registerTagLookup } from './tag-ipc.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -139,6 +140,7 @@ app.whenReady().then(() => {
   });
 
   createWindow();
+  registerTagLookup(() => mainWindow);
   const drainLibrary = registerLibrary(() => mainWindow, () => store.get().prompts || []);
   registerUpdater(() => mainWindow, drainLibrary);
 

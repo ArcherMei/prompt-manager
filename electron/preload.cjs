@@ -1,6 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
+  tags: (action, args) => ipcRenderer.invoke('tag-lookup', action, args),
   updates: { info: () => ipcRenderer.invoke('update-info'), install: () => ipcRenderer.invoke('update-install') },
   library: {
     scan: (side) => ipcRenderer.invoke('library-scan', side),

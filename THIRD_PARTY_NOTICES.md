@@ -11,3 +11,5 @@ The project's GPL-3.0-only license does not replace licenses on third-party comp
 The fictional prose, HTML and geometric SVG drawings in `examples/` were newly authored for this project with AI assistance. The model-extension files are text fixtures, not trained models or copied third-party weights. No personal model collection, prompt database or browser archive is included in the examples.
 
 本项目许可证不替换第三方组件的许可证。重新分发时请保留各组件的版权和许可声明。`examples/` 中的虚构文字、HTML 和几何 SVG 为本项目新编写；模型扩展名文件仅为文字占位文件，没有第三方训练权重或个人资料。
+
+- csv-parse — MIT, copyright Adaltas; see node_modules/csv-parse/LICENSE. Used for streaming CSV tag imports. Danbooru metadata is user-supplied or downloaded separately and is not bundled with this application.

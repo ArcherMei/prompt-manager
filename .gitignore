@@ -29,3 +29,9 @@ release-upload/
 .env
 .env.*
 !.env.example
+
+# Local Danbooru snapshots
+danbooru-data*/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal

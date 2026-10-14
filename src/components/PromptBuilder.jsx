@@ -1,7 +1,8 @@
+import TagLookup from './TagLookup';
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
-export default function PromptBuilder({ selectedPrompts, onRemovePrompt, onClear, isOpen, onToggleOpen }) {
+export default function PromptBuilder({ selectedPrompts, onInsertTags, onRemovePrompt, onClear, isOpen, onToggleOpen }) {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isEditingPreview, setIsEditingPreview] = useState(false);
   const [previewText, setPreviewText] = useState('');
@@ -58,6 +59,7 @@ export default function PromptBuilder({ selectedPrompts, onRemovePrompt, onClear
             </div>
           </div>
           
+          <TagLookup onInsert={onInsertTags} builderTags={rawString} />
           <div style={{ flex: 1, padding: '16px', overflowY: 'auto' }}>
             {selectedPrompts.length === 0 ? (
               <p style={{ color: 'var(--text-secondary)', fontStyle: 'italic', textAlign: 'center', marginTop: '20px', fontSize: '13px' }}>

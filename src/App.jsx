@@ -319,7 +319,8 @@ function App() {
         </div>
         )}
       </div>
-      <PromptBuilder 
+      <PromptBuilder
+        onInsertTags={tags => setSelectedPrompts(previous => [...previous, ...tags.filter(tag => !previous.some(p => p.text === tag.name)).map(tag => ({ id: 'danbooru:' + tag.name, text: tag.name }))])}
         selectedPrompts={selectedPrompts} 
         onClear={() => setSelectedPrompts([])} 
         onRemovePrompt={togglePromptSelection}
