@@ -83,3 +83,9 @@ Copyright (C) 2026 ArcherMei and contributors.
 项目及其原创展示内容采用 **GNU GPL 第 3 版，仅此版本（GPL-3.0-only）**，完整条款见 [LICENSE](LICENSE)。发布基于本项目修改的版本时，需要遵循 GPL 提供对应源码。软件不提供担保。
 
 第三方依赖和模板素材仍遵循其各自许可证，见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+
+## Danbooru 标签查询
+
+Builder 支持本地 SQLite 标签/别名校验、LM Studio 中文查询和复制/插入。详见 [Mac 配置与数据导入说明](docs/DANBOORU-TAGS.zh-CN.md)。无需 Python；开发测试需要 Node 22.13+ 或 24 LTS。
+
+**Windows 组装提示词、Mac 运行模型**：见 [两台电脑配置说明](docs/WINDOWS-MAC-LM-STUDIO.zh-CN.md)。标签库在客户端本地，只有当前查询和候选标签发送给你配置的模型服务器。

@@ -47,7 +47,7 @@ The separate [`examples/`](examples/) folder contains newly written fictional pr
 
 ## Build from source
 
-Requires Node.js 22.12+ and npm. Build on the target platform when possible. Cross-building Windows on macOS requires Wine and electron-builder's Windows tooling.
+Requires Node.js 22.13+ (or Node 24 LTS) and npm. Build on the target platform when possible. Cross-building Windows on macOS requires Wine and electron-builder's Windows tooling.
 
 ```sh
 npm ci
@@ -83,3 +83,9 @@ Copyright (C) 2026 ArcherMei and contributors.
 This project and its original demonstration content are licensed under the **GNU General Public License, version 3 only (GPL-3.0-only)**. See [LICENSE](LICENSE) for the full terms. If you distribute a modified version, the GPL requires you to provide its corresponding source under the GPL. The software is provided without warranty.
 
 Third-party dependencies and template assets remain under their own licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+## Danbooru tag lookup
+
+The Builder includes a local SQLite-backed tag lookup popup with LM Studio Chinese search, verified tags and aliases, and copy/insert actions. See [Windows/macOS setup and database import guide](docs/DANBOORU-TAGS.zh-CN.md). No Python installation is needed; development tests require Node 22.13+ or 24 LTS.
+
+For a Windows client with LM Studio running on a Mac, see [Windows-to-Mac setup](docs/WINDOWS-MAC-LM-STUDIO.zh-CN.md). The tag index stays on the client; only the query and retrieved candidates go to the configured model server.
