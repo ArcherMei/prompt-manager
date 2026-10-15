@@ -2,7 +2,7 @@
 
 [简体中文](README.zh-CN.md) · **English**
 
-A local desktop app for organizing Prompt / Tag records, linking them to LoRA files, and keeping HTML usage guides alongside your models. Built with Electron, React and Vite for Windows and macOS. The app is currently only available in Chinese. English might be added later. 
+A local desktop app for organizing Prompt / Tag records, linking them to LoRA files, and keeping HTML usage guides alongside your models. Built with Electron, React and Vite for Windows and macOS. The app currently only supports Chinese. English might be added later. 
 
 **AI development disclosure:** Most of this project's code was generated with AI assistance, under the maintainer's direction, and then iterated through testing and real use. This is an early personal project, not professionally audited software. Contributions, bug reports and independent review are welcome.
 
